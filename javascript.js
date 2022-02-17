@@ -1,63 +1,83 @@
-//Create Div//
-const container = document.querySelector("#container");
+//Defaults//
+let currentMode = 'draw'
+let currentSize = 16
 
-
-//Create Grid within new Div//
-
-function createGrid(gridValue){
-    for (let i = 0; i < gridValue * gridValue; i++){
-        const content = document.createElement('div');
-        content.classList.add('grid');
-        container.appendChild(content); 
-    }
-}
-
-createGrid(16);
-
-
-//Select cells to change color with mouseover Hover//
-let cells = document.querySelectorAll(".grid");
-function blackColor(){
-    this.style.backgroundColor = '#000000';
-}
-cells.forEach(cell => cell.addEventListener('mouseover', blackColor))
-
-
-
-//Refresh Current Grid//
-clearButton = document.querySelector('.refresh');
-function refreshGrid(){
-    window.location.reload();
-}
-clearButton.addEventListener('click', refreshGrid);
-
-
-
-//Pixel Size with Prompt//
-const sizeButton = document.querySelector(".size");
-function changeGrid(){
-    let newGrid = prompt("Enter Grid Size between 1 to 100")
-    let newPixel = parseInt(newGrid);
-    if (newPixel >= 1 && newPixel <= 100){
-        gridValue = newPixel;
-        createGrid();
-    }else {
-        alert("Enter a number from 1-100 range");
-      }
-}
-sizeButton.addEventListener('click', changeGrid);
-
-
-
-
-//Eraser//
-
-
-
-//Bonus: Random Rainbow Value//
-function changeColor(e) {
-    const Color1 = Math.floor(Math.random() * 256);
-    const Color2 = Math.floor(Math.random() * 256);
-    const Color3 = Math.floor(Math.random() * 256);
-    e.target.style.backgroundColor = `rgb(${Color1}, ${Color2}, ${Color3})`;
+window.onload = () => {
+    setupGrid(currentSize)
+    activateButton(currentMode)
   }
+
+//Button Values & Events//
+
+const drawBtn = document.getElementById('drawBtn')
+const clearBtn = document.getElementById('clearBtn')
+const sizeValue = document.getElementById('sizeValue')
+const sizeSlider = document.getElementById('sizeSlider')
+const grid = document.getElementById('grid')
+
+drawBtn.onclick = () => setCurrentMode('draw')
+clearBtn.onclick = () => reloadGrid()
+sizeSlider.onmousemove = (e) => updateSizeValue(e.target.value)
+sizeSlider.onchange = (e) => changeSize(e.target.value)
+
+let mouseDown = false
+document.body.onmousedown = () => (mouseDown = true)
+document.body.onmouseup = () => (mouseDown = false)
+
+//Activations//
+
+function freshGrid(e) {
+    if (e.type === 'mouseover' && !mouseDown) return
+      else if (currentMode === 'draw') {
+      e.target.style.backgroundColor = 'black'
+    } else if (reloadGrid()) {
+      e.target.style.backgroundColor = '#fefefe'
+    }
+  }
+  
+function activateButton() {
+    if (currentMode === 'draw') {
+      drawBtn.classList.remove('active')
+    } else if (currentMode === reloadGrid()) {
+      clearBtn.classList.remove('active')
+    }
+  }
+
+
+// GRID with use prompt (slider style) //
+
+function setCurrentSize(newSize) {
+    currentSize = newSize
+  }
+
+function changeSize(value) {
+  setCurrentSize(value)
+  updateSizeValue(value)
+  reloadGrid()
+}
+
+function updateSizeValue(value) {
+  sizeValue.innerHTML = `${value} x ${value}`
+}
+
+function reloadGrid() {
+  clearGrid()
+  setupGrid(currentSize)
+}
+
+function clearGrid() {
+  grid.innerHTML = ''
+}
+
+function setupGrid(size) {
+  grid.style.gridTemplateColumns = `repeat(${size}, 1fr)`
+  grid.style.gridTemplateRows = `repeat(${size}, 1fr)`
+
+  for (let i = 0; i < size * size; i++) {
+    const gridElement = document.createElement('div')
+    gridElement.classList.add("grid-element")
+    gridElement.addEventListener('mouseover', freshGrid)
+    gridElement.addEventListener('mousedown', freshGrid)
+    grid.appendChild(gridElement)
+  }
+}

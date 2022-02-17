@@ -4,29 +4,29 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="styles.css">
     <title>EtchASketch</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet"/>
+    <link rel="stylesheet" href="styles.css">
+    <script src="https://kit.fontawesome.com/4c536a6bd5.js" crossorigin="anonymous"></script>
+    
 </head>
 <body>
     <header class="header">
-        <h1>Etch A Sketch</h1>
+        <h1 class="title">Etch A Sketch</h1>
     </header>
-    <div class="main">
-        <div id="controls">
+    <main class="main">
+        <div class="settings">
             <h2>Controls</h2>
-            <button class="size" type="button">Pixel Size</button>
-            <br>
-            <button class="refresh" type="button">Refresh</button>
-            <button class="erase" type="button">Erase</button>
-            <br>
-            <button class="black" type="button">Black</button>
-            <button class="rainbow" type="button">Rainbow</button>
-            
-            
+            <button id="drawBtn">Draw</button>
+            <button id="clearBtn">Clear</button>
+            <div id="sizeValue" class="size-value">16 x 16</div>
+            <input id="sizeSlider" type="range" value="16" min="1" max="64" />
         </div>
-        <div id="container"></div>
-    </div>
-    <div id="footer">Copyright & Attributes</div>
+        <div id="grid" class="grid"></div>
+    </main>
+    <footer class="footer">Anna Gaskell 2022</footer>
     <script src="javascript.js"></script>
 </body>
 </html>
