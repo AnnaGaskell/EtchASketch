@@ -1,83 +1,56 @@
-//Defaults//
-let currentMode = 'draw'
-let currentSize = 16
+//Default//
+let color = 'black';
+let click = true;
+let input = 16
 
-window.onload = () => {
-    setupGrid(currentSize)
-    activateButton(currentMode)
+function setupGrid(input) {
+  let board = document.querySelector(".board")
+  let squares = document.querySelectorAll(".div")
+  squares.forEach((div) => div.remove());
+  board.style.gridTemplateColumns = `repeat(${input}, 1fr)`
+  board.style.gridTemplateRows = `repeat(${input}, 1fr)`
+
+  for (let i = 0; i < input * input; i++) {
+    let square = document.createElement('div');
+    square.classList.add("pixel")
+    square.addEventListener('mouseover', colorSquare);
+    square.style.backgroundColor = 'white';
+    board.insertAdjacentElement("beforeend", square);
   }
+}
 
-//Button Values & Events//
+setupGrid(input);
 
-const drawBtn = document.getElementById('drawBtn')
-const clearBtn = document.getElementById('clearBtn')
-const sizeValue = document.getElementById('sizeValue')
-const sizeSlider = document.getElementById('sizeSlider')
-const grid = document.getElementById('grid')
+function changeSize(input){
+  if (input >= 2 && input <=100){
+    resetBoard();
+    setupGrid(input);
+  } else {
+    alert("Choose an input between 2 and 100")
+  }
+}
 
-drawBtn.onclick = () => setCurrentMode('draw')
-clearBtn.onclick = () => reloadGrid()
-sizeSlider.onmousemove = (e) => updateSizeValue(e.target.value)
-sizeSlider.onchange = (e) => changeSize(e.target.value)
-
-let mouseDown = false
-document.body.onmousedown = () => (mouseDown = true)
-document.body.onmouseup = () => (mouseDown = false)
-
-//Activations//
-
-function freshGrid(e) {
-    if (e.type === 'mouseover' && !mouseDown) return
-      else if (currentMode === 'draw') {
-      e.target.style.backgroundColor = 'black'
-    } else if (reloadGrid()) {
-      e.target.style.backgroundColor = '#fefefe'
+function colorSquare(){
+  if (click) {
+    if (color === "rainbow") {
+      this.style.backgroundColor = `hsl(${Math.random() * 360}, 100%, 50%)`;
+    }else {
+      this.style.backgroundColor = color;
     }
   }
-  
-function activateButton() {
-    if (currentMode === 'draw') {
-      drawBtn.classList.remove('active')
-    } else if (currentMode === reloadGrid()) {
-      clearBtn.classList.remove('active')
-    }
-  }
-
-
-// GRID with use prompt (slider style) //
-
-function setCurrentSize(newSize) {
-    currentSize = newSize
-  }
-
-function changeSize(value) {
-  setCurrentSize(value)
-  updateSizeValue(value)
-  reloadGrid()
 }
 
-function updateSizeValue(value) {
-  sizeValue.innerHTML = `${value} x ${value}`
+function changeColor(choice){
+  color = choice
 }
 
-function reloadGrid() {
-  clearGrid()
-  setupGrid(currentSize)
+function resetBoard(){
+  let board = document.querySelector(".board");
+  let squares = board.querySelectorAll("div")
+  squares.forEach((div) => div.remove());
+  squares.forEach((div) => (div.style.backgroundColor = "white"));
 }
 
-function clearGrid() {
-  grid.innerHTML = ''
-}
-
-function setupGrid(size) {
-  grid.style.gridTemplateColumns = `repeat(${size}, 1fr)`
-  grid.style.gridTemplateRows = `repeat(${size}, 1fr)`
-
-  for (let i = 0; i < size * size; i++) {
-    const gridElement = document.createElement('div')
-    gridElement.classList.add("grid-element")
-    gridElement.addEventListener('mouseover', freshGrid)
-    gridElement.addEventListener('mousedown', freshGrid)
-    grid.appendChild(gridElement)
-  }
-}
+document.querySelector("body").addEventListener('click', () => {
+  click = !click;
+})
