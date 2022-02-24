@@ -3,19 +3,22 @@ let color = 'black';
 let click = true;
 let input = 16
 
+document.querySelector("body").addEventListener('click', () => {
+  click = !click;
+})
+
 function setupGrid(input) {
   let board = document.querySelector(".board")
-  let squares = document.querySelectorAll(".div")
-  squares.forEach((div) => div.remove());
+
   board.style.gridTemplateColumns = `repeat(${input}, 1fr)`
   board.style.gridTemplateRows = `repeat(${input}, 1fr)`
 
   for (let i = 0; i < input * input; i++) {
-    let square = document.createElement('div');
+    let square = document.createElement("div");
     square.classList.add("pixel")
     square.addEventListener('mouseover', colorSquare);
     square.style.backgroundColor = 'white';
-    board.insertAdjacentElement("beforeend", square);
+    board.appendChild(square);
   }
 }
 
@@ -48,9 +51,4 @@ function resetBoard(){
   let board = document.querySelector(".board");
   let squares = board.querySelectorAll("div")
   squares.forEach((div) => div.remove());
-  squares.forEach((div) => (div.style.backgroundColor = "white"));
 }
-
-document.querySelector("body").addEventListener('click', () => {
-  click = !click;
-})
